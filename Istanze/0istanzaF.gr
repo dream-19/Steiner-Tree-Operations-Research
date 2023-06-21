@@ -1,0 +1,22 @@
+E A B 8
+E A I 2
+E A C 2 
+E A D 9
+E C D 8
+E D F 4
+E D E 8
+E F E 3
+E F G 5
+E I F 1
+E I B 2
+E B G 5
+E B H 8
+E H G 8
+END
+T A
+T B 
+T D 
+T G
+END
+14
+
