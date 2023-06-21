@@ -1,0 +1,20 @@
+E A B 3
+E A D 2
+E A E 6
+E D E 3
+E D G 2
+E D C 4
+E E F 5
+E E G 1
+E G F 5
+E G C 1
+E F C 2
+E F B 7
+E C B 4
+END
+T A
+T E 
+T F
+END
+8
+

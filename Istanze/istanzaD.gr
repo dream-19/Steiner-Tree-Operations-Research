@@ -1,0 +1,21 @@
+E A E 2
+E A B 6
+E A F 2
+E A G 3
+E B C 5
+E B F 5
+E F G 4
+E F C 2
+E C G 3
+E C D 4
+E E G 4
+E E D 13 
+E G D 2
+END
+T A
+T E 
+T C
+T D
+END
+10
+
