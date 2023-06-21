@@ -10,6 +10,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import heapq
 
+
 class Graph:
     def __init__(self):
         self.vertices = {}
@@ -33,9 +34,11 @@ class Graph:
             self.add_vertex(vertex1)
         if vertex2 not in self.vertices:
             self.add_vertex(vertex2)
-
-        self.vertices[vertex1][vertex2] = weight
-        self.vertices[vertex2][vertex1] = weight
+        
+        if vertex2 not in self.vertices[vertex1] and vertex1 not in self.vertices[vertex2]:
+            self.vertices[vertex1][vertex2] = weight
+            self.vertices[vertex2][vertex1] = weight
+        
 
     def get_neighbors(self, vertex):
         return self.vertices[vertex]
@@ -245,4 +248,23 @@ def draw_row_graph(nome_istanza, grafo, steiner_tree):
     ax.set_xticks([])
     ax.set_yticks([])
     steiner_tree.draw_graph()        
-        
+
+def check_admissibility(grafo_originale, steiner_tree):
+    #1) condizione: non devono esserci cicli, ovvero il numero_archi = nodi -1
+    numero_archi = steiner_tree.get_num_edges()
+    numero_vertici = steiner_tree.get_num_vertices()
+    if (numero_archi + 1 ) != numero_vertici:
+        '''print('numero_vertici:', numero_vertici)
+        print('numero_archi:', numero_archi)
+        print(steiner_tree.get_edges())'''
+        return False
+    
+    #2) condizione: tutti i nodi di steiner devono essere presenti nel risultato
+    nodi_terminals = grafo_originale.get_steiner_vertices()
+    nodi_terminals_risultato = steiner_tree.get_steiner_vertices()
+    if sorted(nodi_terminals) != sorted(nodi_terminals_risultato):
+        '''print(sorted(nodi_terminals))
+        print(sorted(nodi_terminals_risultato))'''
+        return False
+    
+    return True
