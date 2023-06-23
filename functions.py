@@ -96,6 +96,33 @@ class Graph:
             visited.append(edge)
         return cost
     
+    def remove_edge(self, edge):
+        vertex1, vertex2 = edge
+        if vertex1 in self.vertices[vertex2] and vertex2 in self.vertices[vertex1]:
+            self.vertices[vertex1].pop(vertex2)
+            self.vertices[vertex2].pop(vertex1)
+    
+    def remove_degree_one_nodes(self):
+        degree = self.calculate_degree()
+
+        # Find degree-1 nodes
+        degree_one_nodes = [vertex for vertex, degree_value in degree.items() if degree_value == 1]
+        if len(degree_one_nodes) == 0:
+            return False #No degree-1 nodes
+
+        # Remove degree-1 nodes and update edges and paths
+        for node in degree_one_nodes:
+            # Get the neighbor of the degree-1 node
+            neighbor = list(self.get_neighbors(node).keys())[0]
+
+            # Remove the degree-1 node and its edges
+            self.vertices.pop(node)
+            self.vertices[neighbor].pop(node)
+            
+        return True #There were degree-1 nodes
+
+
+    
     def draw_graph(self):
         nx_graph = nx.Graph()
         for vertex, neighbors in self.vertices.items():
