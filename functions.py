@@ -39,7 +39,6 @@ class Graph:
             self.vertices[vertex1][vertex2] = weight
             self.vertices[vertex2][vertex1] = weight
         
-
     def get_neighbors(self, vertex):
         return self.vertices[vertex]
     
@@ -72,6 +71,15 @@ class Graph:
             return self.vertices[vertex1][vertex2]
         else:
             return None
+        
+    def calculate_degree(self):
+        degree = {}
+
+        for vertex in self.vertices:
+            neighbors = self.get_neighbors(vertex)
+            degree[vertex] = len(neighbors)
+
+        return degree
     
     def calculate_cost(graph):
         cost = 0
