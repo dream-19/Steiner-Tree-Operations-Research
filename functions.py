@@ -1,9 +1,10 @@
 '''
-File che contiene le funzioni comuni usate:
+File che contiene le funzioni comuni usate per la creazione e il disegno dei grafi:
 - Classe Graph: creazione dei grafi
 - draw_with_steiner_tree: disegnare il grafo con steiner tree sovrapposto
 - create_graph: crea il grafico leggendo un file
 - draw_row_graph: fa una riga con i 3 grafici di interesse
+- check_admissibility: controlla l'ammissibilità dell'albero di copertura minimo creato
 '''
 
 import networkx as nx
@@ -102,11 +103,13 @@ class Graph:
             self.vertices[vertex1].pop(vertex2)
             self.vertices[vertex2].pop(vertex1)
     
+    #Rimuovo i vertici di grado 1 (che non sono terminals)
     def remove_degree_one_nodes(self):
         degree = self.calculate_degree()
+        
 
         # Find degree-1 nodes
-        degree_one_nodes = [vertex for vertex, degree_value in degree.items() if degree_value == 1]
+        degree_one_nodes = [vertex for vertex, degree_value in degree.items() if degree_value == 1 and vertex not in self.steiner_vertices]
         if len(degree_one_nodes) == 0:
             return False #No degree-1 nodes
 
