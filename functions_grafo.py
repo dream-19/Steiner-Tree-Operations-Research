@@ -5,6 +5,7 @@ File che contiene le funzioni comuni usate per la creazione e il disegno dei gra
 - create_graph: crea il grafico leggendo un file
 - draw_row_graph: fa una riga con i 3 grafici di interesse
 - check_admissibility: controlla l'ammissibilità dell'albero di copertura minimo creato
+- remove duplicate: rimuove gli archi doppi dall'elenco degli archi
 '''
 
 import networkx as nx
@@ -285,7 +286,15 @@ def draw_row_graph(nome_istanza, grafo, steiner_tree):
     ax.title.set_text('Costo: '+str(steiner_tree.calculate_cost())+"\nCosto Ottimale: "+str(grafo.get_optimal_cost_steiner_tree()))
     ax.set_xticks([])
     ax.set_yticks([])
-    steiner_tree.draw_graph()        
+    steiner_tree.draw_graph() 
+
+#Funzione per rimuovere i duplicati dall'elenco degli archi (dato che è un grafo indiretto)
+def remove_duplicate(edges):
+    edges_unique = []
+    for tup in edges:
+        if tup not in edges_unique and (tup[1],tup[0]) not in edges_unique:
+            edges_unique.append(tup)
+    return edges_unique       
 
 def check_admissibility(grafo_originale, steiner_tree):
     #1) condizione: non devono esserci cicli, ovvero il numero_archi = nodi -1
