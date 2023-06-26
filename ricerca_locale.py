@@ -26,6 +26,7 @@ Se ho esplorato tutto l'intorno ma non c'è una soluzione migliore:
 MIGLIORIE POSSIBILI:
 - aggiornare shortest path in modo che con costi uguali tra i vari percorsi non scelga sempre lo stesso
 - aggiornare in modo tale che accetti anche soluzioni con costo uguale ma con archi diversi -> va gestita la possibile creazione di loop (magari fare un numero massimo di iterazioni o simili però MAH)
+- prendere casualmente l'arco da rimuovere invece di prendere sempre lo stesso dall'elenco (?)
 '''
 
 
