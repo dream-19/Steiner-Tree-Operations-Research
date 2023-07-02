@@ -124,9 +124,15 @@ class Graph:
             self.vertices[neighbor].pop(node)
             
         return True #There were degree-1 nodes
-
-
     
+    #Converto il grafo in un grafo della libreria nx per poterne usare i metodi
+    def convert_to_nx_graph(self):
+        nx_graph = nx.Graph()
+        for vertex, neighbors in self.vertices.items():
+            for neighbor, weight in neighbors.items():
+                nx_graph.add_edge(vertex, neighbor, weight=weight)
+        return nx_graph
+
     def draw_graph(self):
         nx_graph = nx.Graph()
         for vertex, neighbors in self.vertices.items():
