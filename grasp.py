@@ -29,72 +29,19 @@ GREEDY RANDOMIZED CONSTRUCTION:
     NB: dato che non è più detto che sia un albero, devo controllare che non ci siano cicli. Quindi se si formano cicli smetto di aggiungere il percorso
 
 '''
-#GREEDY randomizzata che si basa sulla naive
-def greedy_randomized_construction_naive(grafo, k):
-    steiner_tree = Graph()
-    terminals = (grafo.get_steiner_vertices()).copy()
-    
-    #Estraggo il primo dei terminali e lo inserisco nel risultato
-    first_node = terminals.pop(0)
-    steiner_tree.add_vertex(first_node)
-    steiner_tree.add_steiner(first_node)
-    
-    #Finchè ho dei nodi terminali da inserire nell'albero
-    while len(terminals) > 0:
-        #1) Trovo il nodo di steiner successivo da aggiungere
-        nodo_terminal_da_aggiungere = terminals.pop(0) #estraggo il primo nodo terminale dalla lista
-        steiner_tree.add_steiner(nodo_terminal_da_aggiungere)
-        
-        #2)  Trovo i k migliori shortest path tra il nodo di attacco e il nodo da aggiungere e ne scelgo uno random
-        #print("Percorsi trovati tra: ", nodo_di_attacco, " e ", nodo_terminal_da_aggiungere)
-        grafonx = grafo.convert_to_nx_graph()
-        
-        
-        all_possible_paths = list(islice(nx.shortest_simple_paths(grafonx, first_node, nodo_terminal_da_aggiungere, weight="weight"), k))
-        path_scelto = random.choice(all_possible_paths)
-        #print("path scelto: ", path_scelto)
-        
-        
-        #3) Aggiungo il percorso al grafo di steiner (tenendo conto della possibilità di inserire altri nodi terminal ed eliminando la possibilità di cicli)
-        for l in range(0, len(path_scelto)-1):
-            primo = path_scelto[l]
-            secondo = path_scelto[l+1]
-            peso = grafonx.get_edge_data(path_scelto[l], path_scelto[l+1])['weight']
-            #print("Devo aggiungere questo arco:", primo, secondo, peso)
-            
-            #Controllo se sto inserendo anche altri nodi terminal per caso
-            #(non ho più la certezza di usare il percorso più corto)
-            if primo in terminals:
-                terminals.remove(primo)
-                steiner_tree.add_steiner(primo)
-            if secondo in terminals:
-                terminals.remove(secondo)
-                steiner_tree.add_steiner(secondo) 
-            
-            #Se ho già un percorso mi fermo (altrimenti creo un ciclo)
-            if secondo in steiner_tree.get_vertices():
-                steiner_tree.add_edge(primo,secondo,peso) #Aggiungo comunque l'ultimo arco per ricollegarmi al percorso già esistente
-                break
-            steiner_tree.add_edge(primo, secondo, peso)
-            
-        first_node = nodo_terminal_da_aggiungere
-            
 
-    #Controllo ammissibilità:
-    if not(check_admissibility(grafo, steiner_tree)):
-        print("NON è STATO PASSATO IL CONTROLLO DELL'AMMISSIBILITà")
-        plt.figure()
-        steiner_tree.draw_graph()
-        sys.exit(0)
-        
-    return steiner_tree
 #GREEDY RANDOMIZZATA CHE SI BASA SULLA SHORTEST PATH
-def greedy_randomized_construction(grafo, k):
+def greedy_randomized_construction(grafo, k, avvio_random = False):
     steiner_tree = Graph()
     terminals = (grafo.get_steiner_vertices()).copy()
     
     #Estraggo il primo dei terminali e lo inserisco nel risultato
-    first_node = terminals.pop(0)
+    if avvio_random:
+        first_node = random.choice(terminals)
+        terminals.remove(first_node)
+        print("first node:", first_node)
+    else:
+        first_node = terminals.pop(0)
     steiner_tree.add_vertex(first_node)
     steiner_tree.add_steiner(first_node)
     
@@ -162,7 +109,7 @@ def greedy_randomized_construction(grafo, k):
     return steiner_tree
 
 #APPLICAZIONE DELLA GRASP
-                                                #tipo 0 =  si basa su naive, tipo 1 si basa su shortest path
+                                                #tipo 0 =  ha avvio random, tipo 1 si basa su shortest path
 def Grasp_with_best_improvment(MaxIter, grafo, tipo):
     start_time = time.time()
     costo_euristica_della_best = None
@@ -178,7 +125,7 @@ def Grasp_with_best_improvment(MaxIter, grafo, tipo):
             if tipo == 1:
                 initial_solution = greedy_randomized_construction(grafo, 10)
             else:
-                initial_solution = greedy_randomized_construction_naive(grafo, 10)
+                initial_solution = greedy_randomized_construction(grafo, 10, True) #True = avvio random
              
             #Rimuovo, finché ci sono o si creano, tutti i nodi di grado 1 non di steiner (caso raro)
             while True:
