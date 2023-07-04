@@ -39,7 +39,6 @@ def greedy_randomized_construction(grafo, k, avvio_random = False):
     if avvio_random:
         first_node = random.choice(terminals)
         terminals.remove(first_node)
-        print("first node:", first_node)
     else:
         first_node = terminals.pop(0)
     steiner_tree.add_vertex(first_node)
