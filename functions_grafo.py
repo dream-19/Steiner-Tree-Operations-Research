@@ -192,7 +192,7 @@ class Graph:
                     heapq.heappush(priority_queue, (new_distance, neighbor))
       
         #Se arrivo qui non sono riuscita a collegare il nodo finale
-        return previous, edge_weights, distances
+        return None
     
 #Funzione per disegnare il grafo con il suo corrispondente steiner tree sovrapposto
 def draw_with_steiner_tree(grafo_originale, steiner_tree):
