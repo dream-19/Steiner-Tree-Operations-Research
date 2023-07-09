@@ -110,7 +110,7 @@ def tabu(original, solution, cost, max_intorno, max_tabu):
         distanza, arrivo = next(iter(possible_paths[partenza].items()))
         #print("percorso minore, partenza, arrivo e distanza: ",partenza, arrivo, distanza)
         
-        #Trovo il collegamento e lo aggiungo formando la nuova soluzione
+        #Trovo il collegamento e lo aggiungo formando la nuova soluzione - IMPEDISCO DI RICREARE LA STESSA SOLUZIONE! (se è possibile)
         grafo_senza_arco = copy.deepcopy(original)
         grafo_senza_arco.remove_edge(removed_edge)
         collegamento = grafo_senza_arco.find_shortest_path(partenza, arrivo)

@@ -58,7 +58,7 @@ def local_search(original, solution, cost):
         ##############################################################################################################
         #1) Fase di rimozione dell'arco 
         # Prendo un arco dall'elenco degli archi
-        removed_edge = edges_unique.pop() #FORSE è MEGLIO PROCEDERE CASUALMENTE INVECE DI MANTENERE L'ORDINE
+        removed_edge = edges_unique.pop() 
         first_node_tree1 = removed_edge[0]
         first_node_tree2 = removed_edge[1]
         #print("\n\nRimuovo questo arco: ", removed_edge, first_node_tree1, first_node_tree2)
