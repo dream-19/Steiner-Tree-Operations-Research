@@ -98,8 +98,6 @@ def greedy_randomized_construction(grafo, k, avvio_random = False):
                 break
             steiner_tree.add_edge(primo, secondo, peso)
             
-   
-    
     #Controllo ammissibilità:
     if not(check_admissibility(grafo, steiner_tree)):
         print("NON è STATO PASSATO IL CONTROLLO DELL'AMMISSIBILITà")
