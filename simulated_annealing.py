@@ -135,9 +135,16 @@ def simulated_annealing(original, iniziale, costo_iniziale, T, equilibrio):
                 if delta_e < 0 : #Accetto
                     current = copy.deepcopy(new_solution)
                     costo_current = new_solution_cost
+                    
+                    #Se è migliore dell'ottimo candidato aggiorno la soluzione
                     if new_solution_cost < ottimo_candidato_costo:
                         ottimo_candidato = copy.deepcopy(new_solution)
                         ottimo_candidato_costo = new_solution_cost
+                        
+                        #Controlliamo se è l'ottimo (per risparmiare computazione)
+                        if int(ottimo_candidato_costo) == int(original.get_optimal_cost_steiner_tree()):
+                            return ottimo_candidato, ottimo_candidato_costo, time.time() - tempoI
+    
                 #Se non è migliore allora la accetto con un valore probabilistico 
                 else: 
                     r = random.random()
