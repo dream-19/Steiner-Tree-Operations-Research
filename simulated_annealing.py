@@ -119,6 +119,9 @@ def simulated_annealing(original, iniziale, costo_iniziale, T, equilibrio):
     
     current = iniziale
     costo_current = costo_iniziale
+    
+    optimal_cost = int(original.get_optimal_cost_steiner_tree())
+    
     while T > 0:
         #print("Temperatura: ", T)
         for _ in range(0, equilibrio): #raggiungo lo stato stabile della temperatura
@@ -132,6 +135,10 @@ def simulated_annealing(original, iniziale, costo_iniziale, T, equilibrio):
             
             # 2.5) Verifico se la soluzione è migliore di quella corrente, se lo è controllo anche se è migliore dell'ottimo candidato
             if check_admissibility(original, new_solution):
+                #Controlliamo se è l'ottimo (per risparmiare computazione)
+                if int(new_solution_cost) <= optimal_cost:
+                    return new_solution, new_solution_cost, time.time() - tempoI
+                        
                 if delta_e < 0 : #Accetto
                     current = copy.deepcopy(new_solution)
                     costo_current = new_solution_cost
@@ -141,9 +148,6 @@ def simulated_annealing(original, iniziale, costo_iniziale, T, equilibrio):
                         ottimo_candidato = copy.deepcopy(new_solution)
                         ottimo_candidato_costo = new_solution_cost
                         
-                        #Controlliamo se è l'ottimo (per risparmiare computazione)
-                        if int(ottimo_candidato_costo) == int(original.get_optimal_cost_steiner_tree()):
-                            return ottimo_candidato, ottimo_candidato_costo, time.time() - tempoI
     
                 #Se non è migliore allora la accetto con un valore probabilistico 
                 else: 
