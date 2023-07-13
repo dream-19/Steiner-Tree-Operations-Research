@@ -70,7 +70,6 @@ def greedy_randomized_construction(grafo, k, avvio_random = False):
         #print("Percorsi trovati tra: ", nodo_di_attacco, " e ", nodo_terminal_da_aggiungere)
         grafonx = grafo.convert_to_nx_graph()
         
-        
         all_possible_paths = list(islice(nx.shortest_simple_paths(grafonx, nodo_di_attacco, nodo_terminal_da_aggiungere, weight="weight"), k))
         path_scelto = random.choice(all_possible_paths)
         #print("path scelto: ", path_scelto)

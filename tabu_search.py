@@ -7,6 +7,7 @@ import time
 
 
 def tabu(original, solution, cost, max_intorno, max_tabu):
+    optimal_cost = original.get_optimal_cost_steiner_tree()
     start_time = time.time()
     k = 1 #numero di esplorazioni 
     
@@ -111,14 +112,33 @@ def tabu(original, solution, cost, max_intorno, max_tabu):
         #print("percorso minore, partenza, arrivo e distanza: ",partenza, arrivo, distanza)
         
         #Trovo il collegamento e lo aggiungo formando la nuova soluzione - IMPEDISCO DI RICREARE LA STESSA SOLUZIONE! (se è possibile)
+        #Controllo se il path che ha trovato non vada a creare cicli
         grafo_senza_arco = copy.deepcopy(original)
         grafo_senza_arco.remove_edge(removed_edge)
+        #print("grafo senza arco:", remove_duplicate(grafo_senza_arco.get_edges()))
         collegamento = grafo_senza_arco.find_shortest_path(partenza, arrivo)
-        if collegamento == None:
-            collegamento = original.find_shortest_path(partenza, arrivo)
-        #print("collegamento: ", collegamento)
-        #print("collegamento aggiunto: ", collegamento)
-        #Aggiungo il percorso al grafo di steiner
+        check_collegamento = True
+        if collegamento is not None:
+            #Rimuovo eventuali archi già presenti nella soluzione (non ho bisogno di riaggiungerli)
+            for edge in list(collegamento.keys()):
+                if edge in new_solution.get_edges():
+                    collegamento.pop(edge)
+                    
+            #Se passa per dei vertici già presenti in soluzione significa che non è riuscito a trovare un percorso che colleghi i nodi,
+            # uso semplicemente l'arco originale che avevo rimosso
+            collegamento3 = [elem for tupla in collegamento.keys() for elem in tupla]
+            collegamento3.pop(0)
+            collegamento3.pop()
+            for el in collegamento3:
+                if el in new_solution.get_vertices():
+                    check_collegamento = False
+                    break
+        else:
+            check_collegamento = False
+            
+        if check_collegamento == False:
+            #print("Devo riusare l'originale")
+            collegamento = original.find_shortest_path(partenza,arrivo)
         for edge in collegamento:
             new_solution.add_edge(edge[0],edge[1],collegamento[edge])
         
@@ -130,15 +150,25 @@ def tabu(original, solution, cost, max_intorno, max_tabu):
         #new_solution.draw_graph()
         #print("new_cost: ", new_cost)
         
+        if not(check_admissibility(original, new_solution)):
+            print('Questa soluzione non è ammissibile')
+            sys.exit(0)
+            
+        #Se ho già trovato l'ottimo mi fermo (per limitare i tempi di computazione)
+        if int(new_cost) <= int(optimal_cost):
+            end_time = time.time()
+            execution_time = end_time - start_time
+            #print("Intorno raggiuntooo: ", intorni_esplorati)
+            return new_solution, new_cost, k, execution_time
         #Devo trovare la migliore soluzione per questo round (ammissibile e diversa dall'ottimo candidato) - ammissibile rispetto alla tabu list
-        if new_cost < best_of_this_round_cost and check_admissibility(original, new_solution) and ottimo_candidato.get_edges() != new_solution.get_edges() and removed_edge not in tabu_list:
+        if new_cost < best_of_this_round_cost and ottimo_candidato.get_edges() != new_solution.get_edges() and removed_edge not in tabu_list:
             #print("Nuova soluzione per questo  round:", new_cost, "vs", best_of_this_round_cost)
             best_of_this_round_cost = new_cost
             best_of_this_round = copy.deepcopy(new_solution)
             best_of_this_round_collegamento = collegamento
             
         #Criterio di aspirazione - non importa la mossa tabu
-        if new_cost < best_solution_cost and check_admissibility(original, new_solution):
+        if new_cost < best_solution_cost:
             best_solution_cost = new_cost
             best_solution = copy.deepcopy(new_solution)
             best_of_this_round_collegamento = collegamento
