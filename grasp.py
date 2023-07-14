@@ -71,9 +71,8 @@ def greedy_randomized_construction(grafo, k, avvio_random = False):
         grafonx = grafo.convert_to_nx_graph()
         
         all_possible_paths = list(islice(nx.shortest_simple_paths(grafonx, nodo_di_attacco, nodo_terminal_da_aggiungere, weight="weight"), k))
-      
         path_scelto = random.choice(all_possible_paths)
-      
+       
         
         
         #3) Aggiungo il percorso al grafo di steiner (tenendo conto della possibilità di inserire altri nodi terminal ed eliminando la possibilità di cicli)

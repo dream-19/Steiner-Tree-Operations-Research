@@ -127,6 +127,8 @@ def simulated_annealing(original, iniziale, costo_iniziale, T, equilibrio):
         for _ in range(0, equilibrio): #raggiungo lo stato stabile della temperatura
             #print("-- Iterazione:", k)
             new_solution = campionamento_casuale(original, current)
+            plt.figure()
+            new_solution.draw_graph()
             
             #2) Calcolo DELTAE
             new_solution_cost = new_solution.calculate_cost()
